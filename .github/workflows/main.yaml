@@ -27,7 +27,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Write values file
-        run: echo "$HELM_VALUES" > values.yaml
+        run: echo "$HELM_VALUES" > ./kubernetes/values.yaml
         env:
           HELM_VALUES: ${{ secrets.HELM_VALUES }}
 

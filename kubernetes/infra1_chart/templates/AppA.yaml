@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: service-a
-          image: "{{ .Values.image.registry }}/lori/service-a:1.0"
+          image: "{{ .Values.image.ecr_registry }}/lori/service-a:1.0"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
