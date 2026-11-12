@@ -1,10 +1,10 @@
-name: Build App A
+name: kubernetes main
 
 on:
   push:
     branches: ['**']  # to exclude tags
     paths:
-      - 'kubernetes/infra1**'
+      - 'kubernetes/infra1_chart/**'
 
 jobs: 
   build:
