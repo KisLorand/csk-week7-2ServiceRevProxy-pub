@@ -1,5 +1,6 @@
 name: kubernetes main
 
+# potentially move this to on pull-request (it's just easier to test this way)
 on:
   push:
     branches: ['**']  # to exclude tags
