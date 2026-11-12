@@ -3,7 +3,7 @@ terraform.tfstate
 terraform.tfstate*
 terraform.tfvars
 
-kubernetes/infra1_chart/values.yaml
+kubernetes/values.yaml
 
 .save
 .notes
