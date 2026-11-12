@@ -1,0 +1,9 @@
+.terraform*
+terraform.tfstate
+terraform.tfstate*
+terraform.tfvars
+
+kubernetes/infra1_chart/values.yaml
+
+.save
+.notes

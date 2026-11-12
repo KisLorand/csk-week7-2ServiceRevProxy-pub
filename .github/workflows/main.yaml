@@ -1,0 +1,38 @@
+name: Build App A
+
+on:
+  push:
+    branches: ['**']  # to exclude tags
+    paths:
+      - 'kubernetes/infra1**'
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for requesting the JWT/OIDC token
+      contents: read 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.16.2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Write values file
+        run: echo "$HELM_VALUES" > values.yaml
+        env:
+          HELM_VALUES: ${{ secrets.HELM_VALUES }}
+
+      - run: aws eks update-kubeconfig --name lori-week7-task-cluster --region ${{ secrets.AWS_REGION }}
+
+      - run: helm upgrade --install infra1 ./infra1 -f infra1/values.yaml --wait
+
+ 

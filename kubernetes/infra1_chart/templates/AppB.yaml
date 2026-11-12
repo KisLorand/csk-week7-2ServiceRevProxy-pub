@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b
+  namespace: infra1
+  labels:
+    app: service-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-b
+  template:
+    metadata:
+      labels:
+        app: service-b
+    spec:
+      containers:
+        - name: service-b
+          image: "{{ .Values.image.registry }}/lori/service-b:1.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /api/sb
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/sb
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  namespace: infra1
+spec:
+  # LoadBalancer gives you a public AWS load balancer URL.
+  # Use ClusterIP instead if the service should only be reachable inside the cluster.
+  type: ClusterIP
+  selector:
+    app: service-b
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
