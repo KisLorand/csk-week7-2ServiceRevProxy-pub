@@ -33,6 +33,8 @@ jobs:
 
       - run: aws eks update-kubeconfig --name lori-week7-task-cluster --region ${{ secrets.AWS_REGION }}
 
-      - run: helm upgrade --install infra1 ./infra1 -f infra1/values.yaml --wait
+      - name: Helm install
+        working-directory: ./kubernetes
+        run: helm upgrade --install infra1 ./infra1_chart -f values.yaml --wait
 
  
