@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "service_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:KisLorand@92023199/csk-week7-2ServiceRevProxy@1450366638:*"]
+      values   = ["repo:KisLorand@92023199/csk-week7-2ServiceRevProxy@1450366638:*"] // Remove this!!
     }
   }
 }
@@ -36,6 +36,8 @@ data "aws_iam_role" "gha_infra" {
   name = "lori-gha-admin-access"
 }
 
+# something separate for the lori-gha-admin-access and lori-ecr-push-week7-task-role roles.
+#   their ARNs are needed in the github secrets, so they should be created before
 resource "aws_eks_access_entry" "gha_infra" {
   cluster_name  = var.cluster_name
   principal_arn = data.aws_iam_role.gha_infra.arn
