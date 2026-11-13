@@ -2,17 +2,18 @@ name: Build Apps manually
 
 on:
   workflow_dispatch:
-    image-version:
-      description: 'The version for the created image'
-      required: true
-      type: string
-    app-type:
-      required: true
-      type: choice
-      options:
-        - appA
-        - appB
-        - All
+    inputs:
+      image-version:
+        description: 'The version for the created image'
+        required: true
+        type: string
+      app-type:
+        required: true
+        type: choice
+        options:
+          - appA
+          - appB
+          - All
 
 jobs: 
   build-appA:
