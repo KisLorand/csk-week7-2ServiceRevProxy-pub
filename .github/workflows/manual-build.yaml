@@ -18,6 +18,9 @@ jobs:
   build-appA:
     uses: ./.github/workflows/reusable-build.yaml
     if: ${{ inputs.app-type }} == "appA" || ${{ inputs.app-type }} == "All"
+    permissions:
+      id-token: write # Required for requesting the JWT/OIDC token
+      contents: read 
     with:
       app-path: "./appA"
       image-name: lori/service-a
@@ -26,6 +29,9 @@ jobs:
   build-appB:
     uses: ./.github/workflows/reusable-build.yaml
     if: ${{ inputs.app-type }} == "appB" || ${{ inputs.app-type }} == "All"
+    permissions:
+      id-token: write # Required for requesting the JWT/OIDC token
+      contents: read 
     with:
       app-path: "./appB"
       image-name: lori/service-b
