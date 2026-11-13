@@ -24,7 +24,6 @@ jobs:
       image-version: ${{ inputs.image-version }}
 
   build-appB:
-    call-build-A:
     uses: ./.github/workflows/reusable-build.yaml
     if: ${{ inputs.app-type }} == "appB" || ${{ inputs.app-type }} == "All"
     with:
