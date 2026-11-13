@@ -10,6 +10,10 @@ on:
 jobs: 
   call-build-A:
     uses: ./.github/workflows/reusable-build.yaml
+    permissions:
+      id-token: write # Required for requesting the JWT/OIDC token
+      contents: read 
+    secrets: inherit
     with:
       app-path: "./appA"
       image-name: lori/service-a
