@@ -1,0 +1,57 @@
+name: Reusable Build Workflow
+
+on:
+  workflow_call:
+    inputs:
+      app-path:
+        description: 'The folder to check the changes in'
+        required: true
+        type: string
+      image-name:
+        description: |
+          'The name for the image to build \
+          Also the name used for the ECR repository'
+        required: true
+        type: string
+      image-version:
+        description: 'The version for the created image'
+        required: true
+        type: string
+
+env:
+  IMAGE_NAME: ${{ inputs.image-name }}
+  IMAGE_VERSION: ${{ inputs.image-version }}  # github.sha - commit sha
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for requesting the JWT/OIDC token
+      contents: read 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ECR_USER_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} |  
+          docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
+
+      - name: Build application
+        working-directory: ${{ inputs.app-path }}
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} .
+
+      - name: Create tag
+        run: |
+          docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} \
+          ${{ secrets.ECR_URI }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+
+      - name: Push to ECR
+        run: |
+          docker push ${{ secrets.ECR_URI }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
